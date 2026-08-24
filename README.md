@@ -8,7 +8,7 @@ not identify the remote API version; operations in this package use Cinder API v
 
 ## Status
 
-This README targets the initial `v0.1.0` release. Releases in the `v0.x` series may introduce
+This README targets the `v0.2.0` release. Releases in the `v0.x` series may introduce
 breaking public API changes before `v1.0.0`.
 
 ## Documentation
@@ -29,15 +29,20 @@ The read-only `volumetype` package provides typed operations to:
 * list all volume types and their user-visible extra specs;
 * list the available QoS capabilities and match them to volume types by `VolumeTypeID`.
 
+The read-only `snapshot` package provides typed operations to:
+
+* get a snapshot by UUID;
+* list all snapshots, optionally filtered by name, status and volume UUID.
+
 The SDK accepts a regional Cinder v3 endpoint, a project-scoped token, a `User-Agent` and an
 HTTP client from the caller. It does not perform Keystone authentication, poll for resource state
 transitions or retry requests on its own. The default HTTP client has a 120-second request timeout;
 the caller can replace it through `Config.HTTPClient` and use contexts for shorter deadlines.
 
 `Create`, `Get`, `Update`, `Extend`, `Delete` and `ListQoSLimits` perform one HTTP request.
-`volume.ListDetail` and `volumetype.List` follow pagination and may perform one request per page.
-Both listings return `v1.KindIncompleteList` if any page cannot be read, so a partial result is
-never mistaken for the complete list.
+`volume.ListDetail`, `volumetype.List` and `snapshot.List` follow pagination and may perform one
+request per page. All listings return `v1.KindIncompleteList` if any page cannot be read, so a
+partial result is never mistaken for the complete list.
 
 The SDK sends a Cinder microversion only when an operation requires one: `Create` from a backup
 uses `3.47`, and extending an attached volume uses `3.42`. Generic request dispatch, arbitrary
@@ -56,11 +61,12 @@ to `terraform-provider-selectel`.
 ### Installation
 
 ```bash
-go get github.com/selectel/blockstorage-go/pkg/v1/volume@v0.1.0
+go get github.com/selectel/blockstorage-go/pkg/v1/volume@v0.2.0
 ```
 
-Install `github.com/selectel/blockstorage-go/pkg/v1/volumetype@v0.1.0` as well when the
-application works with volume types or QoS capabilities.
+Install `github.com/selectel/blockstorage-go/pkg/v1/volumetype@v0.2.0` or
+`github.com/selectel/blockstorage-go/pkg/v1/snapshot@v0.2.0` as well when the application works
+with volume types, QoS capabilities or snapshots.
 
 ### Authentication
 
@@ -167,6 +173,7 @@ has to be confirmed by the caller before it is acted upon.
 ```text
 pkg/v1              the public client facade, configuration and error classes
 pkg/v1/internal     the transport and pagination implementation
+pkg/v1/snapshot     the read-only operations over snapshots
 pkg/v1/volume       the operations over a volume and over the listing of volumes
 pkg/v1/volumetype   the read-only operations over volume types
 ```

@@ -51,7 +51,7 @@ func Get(ctx context.Context, client *v1.Client, volumeTypeID string) (*View, *v
 // List returns all volume types visible to the token and never returns a partial result. Cinder
 // may accept type names that are not present in this list.
 func List(ctx context.Context, client *v1.Client, opts ListOpts) ([]View, error) {
-	return pagination.ReadAll[View](ctx, client, basePath, "volume_types", opts.Limit, func() *pageEnvelope {
+	return pagination.ReadAll[View](ctx, client, basePath, "volume_types", nil, opts.Limit, func() *pageEnvelope {
 		return &pageEnvelope{}
 	})
 }

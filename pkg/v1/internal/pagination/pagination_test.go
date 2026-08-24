@@ -3,6 +3,7 @@ package pagination
 import (
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -52,6 +53,18 @@ func (client *testHTTPClient) Do(request *http.Request) (*http.Response, error) 
 }
 
 func TestReadAll(t *testing.T) {
+	t.Run("CombinesQueryAndLimit", func(t *testing.T) {
+		httpClient := &testHTTPClient{answers: []testAnswer{{status: http.StatusOK, body: `{"items":[]}`}}}
+
+		_, err := ReadAll[testItem](
+			t.Context(), testClient(t, httpClient), "items", "items",
+			url.Values{"status": []string{"available"}}, 5, newTestPage,
+		)
+		require.NoError(t, err)
+		require.Len(t, httpClient.requests, 1)
+		require.Equal(t, "limit=5&status=available", httpClient.requests[0].URL.RawQuery)
+	})
+
 	t.Run("ReadsEveryPageOnTheConfiguredEndpoint", func(t *testing.T) {
 		httpClient := &testHTTPClient{answers: []testAnswer{
 			{
@@ -63,7 +76,7 @@ func TestReadAll(t *testing.T) {
 			{status: http.StatusOK, body: `{"items":[]}`},
 		}}
 
-		items, err := ReadAll[testItem](t.Context(), testClient(t, httpClient), "items", "items", 1, newTestPage)
+		items, err := ReadAll[testItem](t.Context(), testClient(t, httpClient), "items", "items", nil, 1, newTestPage)
 		require.NoError(t, err)
 		require.Equal(t, []testItem{{ID: "item-1"}, {ID: "item-2"}}, items)
 		require.Len(t, httpClient.requests, 3)
@@ -87,7 +100,7 @@ func TestReadAll(t *testing.T) {
 			},
 		}}
 
-		items, err := ReadAll[testItem](t.Context(), testClient(t, httpClient), "items", "items", 1, newTestPage)
+		items, err := ReadAll[testItem](t.Context(), testClient(t, httpClient), "items", "items", nil, 1, newTestPage)
 
 		require.Nil(t, items)
 		require.True(t, v1.IsKind(err, v1.KindIncompleteList), "unexpected error: %v", err)
@@ -103,7 +116,7 @@ func TestReadAll(t *testing.T) {
 			{status: http.StatusOK, body: page},
 		}}
 
-		items, err := ReadAll[testItem](t.Context(), testClient(t, httpClient), "items", "items", 1, newTestPage)
+		items, err := ReadAll[testItem](t.Context(), testClient(t, httpClient), "items", "items", nil, 1, newTestPage)
 
 		require.Nil(t, items)
 		require.True(t, v1.IsKind(err, v1.KindIncompleteList), "unexpected error: %v", err)

@@ -38,14 +38,22 @@ func ReadAll[T any, P Page[T]](
 	client *v1.Client,
 	path string,
 	responseEnvelope string,
+	query url.Values,
 	limit int,
 	newPage func() P,
 ) ([]T, error) {
 	options := []transport.RequestOption{
 		transport.WithResponseEnvelope(responseEnvelope),
 	}
+	mergedQuery := make(url.Values, len(query)+1)
+	for key, values := range query {
+		mergedQuery[key] = values
+	}
 	if limit > 0 {
-		options = append(options, transport.WithQuery(url.Values{"limit": []string{strconv.Itoa(limit)}}))
+		mergedQuery.Set("limit", strconv.Itoa(limit))
+	}
+	if len(mergedQuery) > 0 {
+		options = append(options, transport.WithQuery(mergedQuery))
 	}
 
 	items := make([]T, 0)
