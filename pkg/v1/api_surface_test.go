@@ -61,6 +61,13 @@ func TestPublicAPISurface(t *testing.T) {
 			"NewClient",
 			"Response",
 		},
+		"snapshot": {
+			"Get",
+			"List",
+			"ListOpts",
+			"View",
+			"View.UnmarshalJSON",
+		},
 		"volume": {
 			"Attachment",
 			"Create",

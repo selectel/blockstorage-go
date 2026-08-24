@@ -151,7 +151,7 @@ func Delete(ctx context.Context, client *v1.Client, volumeID string) (*v1.Respon
 
 // ListDetail returns all pages of the detailed volume list and never returns a partial result.
 func ListDetail(ctx context.Context, client *v1.Client, opts ListOpts) ([]View, error) {
-	return pagination.ReadAll[View](ctx, client, detailPath, "volumes", opts.Limit, func() *pageEnvelope {
+	return pagination.ReadAll[View](ctx, client, detailPath, "volumes", nil, opts.Limit, func() *pageEnvelope {
 		return &pageEnvelope{}
 	})
 }
