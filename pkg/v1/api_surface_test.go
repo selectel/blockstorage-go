@@ -34,6 +34,12 @@ var (
 	}
 )
 
+const (
+	declGet      = "Get"
+	declListOpts = "ListOpts"
+	declView     = "View"
+)
+
 func TestPublicAPISurface(t *testing.T) {
 	t.Parallel()
 
@@ -62,10 +68,10 @@ func TestPublicAPISurface(t *testing.T) {
 			"Response",
 		},
 		"snapshot": {
-			"Get",
+			declGet,
 			"List",
-			"ListOpts",
-			"View",
+			declListOpts,
+			declView,
 			"View.UnmarshalJSON",
 		},
 		"volume": {
@@ -75,21 +81,21 @@ func TestPublicAPISurface(t *testing.T) {
 			"Delete",
 			"Extend",
 			"ExtendOpts",
-			"Get",
+			declGet,
 			"ListDetail",
-			"ListOpts",
+			declListOpts,
 			"Update",
 			"UpdateOpts",
-			"View",
+			declView,
 		},
 		"volumetype": {
 			"DefaultTypeID",
-			"Get",
+			declGet,
 			"List",
 			"ListQoSLimits",
-			"ListOpts",
+			declListOpts,
 			"QoSLimitsView",
-			"View",
+			declView,
 		},
 	}
 
