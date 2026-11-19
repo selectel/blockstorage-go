@@ -29,7 +29,7 @@ var (
 		ID: string(""), Status: string(""), Size: int(0), Name: string(""), Description: string(""),
 		AvailabilityZone: string(""), VolumeType: string(""), SnapshotID: string(""),
 		SourceVolID: string(""), Metadata: map[string]string(nil), Attachments: []Attachment(nil),
-		Bootable: string(""),
+		Bootable: string(""), VolumeImageMetadata: map[string]string(nil),
 	}
 	_ = Attachment{ID: string(""), AttachmentID: string(""), ServerID: string(""), Device: string("")}
 )
@@ -45,7 +45,7 @@ func TestVolume_PublicDTOFields(t *testing.T) {
 	assertPublicFields(t, reflect.TypeOf(ListOpts{}), "Limit")
 	assertPublicFields(t, reflect.TypeOf(View{}),
 		"ID", "Status", "Size", "Name", "Description", "AvailabilityZone", "VolumeType",
-		"SnapshotID", "SourceVolID", "Metadata", "Attachments", "Bootable")
+		"SnapshotID", "SourceVolID", "Metadata", "Attachments", "Bootable", "VolumeImageMetadata")
 	assertPublicFields(t, reflect.TypeOf(Attachment{}), "ID", "AttachmentID", "ServerID", "Device")
 }
 

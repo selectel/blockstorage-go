@@ -402,3 +402,24 @@ func TestVolume_ListDetail(t *testing.T) {
 		require.Equal(t, "limit=2&marker=vol-4", httpClient.requests[2].URL.RawQuery)
 	})
 }
+
+func TestVolume_GetDecodesImageMetadata(t *testing.T) {
+	t.Run("BootableVolume", func(t *testing.T) {
+		httpClient := &testHTTPClient{answers: []testAnswer{{status: http.StatusOK, body: `{"volume": {
+			"id": "0e1c2b3a-4d5e-6f70-8192-a3b4c5d6e7f8", "status": "in-use", "size": 10, "bootable": "true",
+			"volume_image_metadata": {"image_id": "image-1", "image_name": "Ubuntu 24.04", "min_disk": "5"}
+		}}`}}}
+
+		view, _, err := Get(t.Context(), testClient(httpClient), testVolumeID)
+		require.NoError(t, err)
+		require.Equal(t, "image-1", view.VolumeImageMetadata["image_id"])
+	})
+
+	t.Run("VolumeWithoutImage", func(t *testing.T) {
+		httpClient := &testHTTPClient{answers: []testAnswer{{status: http.StatusOK, body: apiVolumeJSON}}}
+
+		view, _, err := Get(t.Context(), testClient(httpClient), testVolumeID)
+		require.NoError(t, err)
+		require.Empty(t, view.VolumeImageMetadata["image_id"])
+	})
+}

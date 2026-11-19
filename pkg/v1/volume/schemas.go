@@ -25,6 +25,10 @@ type View struct {
 
 	// Bootable is returned by Cinder as the string "true" or "false".
 	Bootable string `json:"bootable"`
+
+	// VolumeImageMetadata describes the image that a bootable volume was created from; its
+	// image_id key holds the image ID. It is empty for a volume that was not created from an image.
+	VolumeImageMetadata map[string]string `json:"volume_image_metadata"`
 }
 
 type Attachment struct {
