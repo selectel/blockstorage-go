@@ -8,7 +8,7 @@ not identify the remote API version; operations in this package use Cinder API v
 
 ## Status
 
-This README targets the `v0.2.0` release. Releases in the `v0.x` series may introduce
+This README targets the `v0.3.0` release. Releases in the `v0.x` series may introduce
 breaking public API changes before `v1.0.0`.
 
 ## Documentation
@@ -61,11 +61,11 @@ to `terraform-provider-selectel`.
 ### Installation
 
 ```bash
-go get github.com/selectel/blockstorage-go/pkg/v1/volume@v0.2.0
+go get github.com/selectel/blockstorage-go/pkg/v1/volume@v0.3.0
 ```
 
-Install `github.com/selectel/blockstorage-go/pkg/v1/volumetype@v0.2.0` or
-`github.com/selectel/blockstorage-go/pkg/v1/snapshot@v0.2.0` as well when the application works
+Install `github.com/selectel/blockstorage-go/pkg/v1/volumetype@v0.3.0` or
+`github.com/selectel/blockstorage-go/pkg/v1/snapshot@v0.3.0` as well when the application works
 with volume types, QoS capabilities or snapshots.
 
 ### Authentication
